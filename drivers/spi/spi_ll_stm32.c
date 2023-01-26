@@ -221,6 +221,8 @@ static int spi_dma_move_buffers(const struct device *dev, size_t len)
 
 #endif /* CONFIG_SPI_STM32_DMA */
 
+static int need_spi_configure = 1;
+
 /* Value to shift out when no application data needs transmitting. */
 #define SPI_STM32_TX_NOP 0x00
 
@@ -515,7 +517,7 @@ static int spi_stm32_configure(const struct device *dev,
 			    clock >> ARRAY_SIZE(scaler));
 		return -EINVAL;
 	}
-
+	
 	LL_SPI_Disable(spi);
 	LL_SPI_SetBaudRatePrescaler(spi, scaler[br - 1]);
 
@@ -583,7 +585,7 @@ static int spi_stm32_configure(const struct device *dev,
 		    (SPI_MODE_GET(config->operation) & SPI_MODE_CPHA) ? 1 : 0,
 		    (SPI_MODE_GET(config->operation) & SPI_MODE_LOOP) ? 1 : 0,
 		    config->slave);
-
+	LL_SPI_Enable(spi);
 	return 0;
 }
 
@@ -622,9 +624,12 @@ static int transceive(const struct device *dev,
 
 	spi_context_lock(&data->ctx, asynchronous, cb, userdata, config);
 
-	ret = spi_stm32_configure(dev, config);
-	if (ret) {
-		goto end;
+	if (need_spi_configure) {
+		ret = spi_stm32_configure(dev, config);
+		need_spi_configure = 0;
+		if (ret) {
+			goto end;
+		}
 	}
 
 	/* Set buffers info */
@@ -636,8 +641,6 @@ static int transceive(const struct device *dev,
 		(void) LL_SPI_ReceiveData8(spi);
 	}
 #endif
-
-	LL_SPI_Enable(spi);
 
 	/* This is turned off in spi_stm32_complete(). */
 	spi_stm32_cs_control(dev, true);
