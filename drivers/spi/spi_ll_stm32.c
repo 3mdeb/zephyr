@@ -629,6 +629,7 @@ static int transceive(const struct device *dev,
 
 	if (need_spi_configure) {
 		ret = spi_stm32_configure(dev, config);
+		need_spi_configure = 0;
 		if (ret) {
 			goto end;
 		}
