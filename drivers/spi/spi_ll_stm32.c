@@ -520,7 +520,7 @@ static int spi_stm32_configure(const struct device *dev,
 			    clock >> ARRAY_SIZE(scaler));
 		return -EINVAL;
 	}
-
+	
 	LL_SPI_Disable(spi);
 	LL_SPI_SetBaudRatePrescaler(spi, scaler[br - 1]);
 
@@ -590,6 +590,7 @@ static int spi_stm32_configure(const struct device *dev,
 		    (SPI_MODE_GET(config->operation) & SPI_MODE_CPHA) ? 1 : 0,
 		    (SPI_MODE_GET(config->operation) & SPI_MODE_LOOP) ? 1 : 0,
 		    config->slave);
+	LL_SPI_Enable(spi);
 	return 0;
 }
 
@@ -642,10 +643,6 @@ static int transceive(const struct device *dev,
 		(void) LL_SPI_ReceiveData8(spi);
 	}
 #endif
-
-	if (need_spi_configure){
-		LL_SPI_Enable(spi);
-	}
 
 	/* This is turned off in spi_stm32_complete(). */
 	spi_stm32_cs_control(dev, true);
