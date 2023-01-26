@@ -588,7 +588,6 @@ static int spi_stm32_configure(const struct device *dev,
 		    (SPI_MODE_GET(config->operation) & SPI_MODE_CPHA) ? 1 : 0,
 		    (SPI_MODE_GET(config->operation) & SPI_MODE_LOOP) ? 1 : 0,
 		    config->slave);
-
 	return 0;
 }
 
@@ -608,6 +607,8 @@ static int transceive(const struct device *dev,
 		      const struct spi_buf_set *rx_bufs,
 		      bool asynchronous, struct k_poll_signal *signal)
 {
+	static int need_spi_configure = 1;
+
 	const struct spi_stm32_config *cfg = dev->config;
 	struct spi_stm32_data *data = dev->data;
 	SPI_TypeDef *spi = cfg->spi;
@@ -625,9 +626,11 @@ static int transceive(const struct device *dev,
 
 	spi_context_lock(&data->ctx, asynchronous, signal, config);
 
-	ret = spi_stm32_configure(dev, config);
-	if (ret) {
-		goto end;
+	if (need_spi_configure) {
+		ret = spi_stm32_configure(dev, config);
+		if (ret) {
+			goto end;
+		}
 	}
 
 	/* Set buffers info */
@@ -640,7 +643,9 @@ static int transceive(const struct device *dev,
 	}
 #endif
 
-	LL_SPI_Enable(spi);
+	if (need_spi_configure){
+		LL_SPI_Enable(spi);
+	}
 
 	/* This is turned off in spi_stm32_complete(). */
 	spi_stm32_cs_control(dev, true);
