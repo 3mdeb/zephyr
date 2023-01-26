@@ -222,6 +222,8 @@ static int spi_dma_move_buffers(const struct device *dev, size_t len)
 
 #endif /* CONFIG_SPI_STM32_DMA */
 
+static int need_spi_configure = 1;
+
 /* Value to shift out when no application data needs transmitting. */
 #define SPI_STM32_TX_NOP 0x00
 
@@ -607,8 +609,6 @@ static int transceive(const struct device *dev,
 		      const struct spi_buf_set *rx_bufs,
 		      bool asynchronous, struct k_poll_signal *signal)
 {
-	static int need_spi_configure = 1;
-
 	const struct spi_stm32_config *cfg = dev->config;
 	struct spi_stm32_data *data = dev->data;
 	SPI_TypeDef *spi = cfg->spi;
