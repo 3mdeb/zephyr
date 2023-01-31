@@ -10,3 +10,8 @@ properties:
       type: int
       required: false
       description: Reference clock frequency for SWO if different than CPU clock.
+
+    cpu-frequency:
+      type: int
+      required: false
+      description: Reference clock frequency of the CPU

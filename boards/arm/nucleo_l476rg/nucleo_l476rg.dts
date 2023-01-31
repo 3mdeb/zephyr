@@ -85,6 +85,7 @@
 
 &cpu0 {
 	cpu-power-states = <&stop0 &stop1 &stop2>;
+        cpu-frequency = < 80000000 >;
 };
 
 &usart1 {
