@@ -12,7 +12,7 @@
 		led1 = &green_led;
 		led2 = &blue_led;
 		spi-8 = &hs_lspi;
-		usart-0 = &flexcomm0;
+		usart-0 = &flexcomm2;
 	};
 
 	leds {
@@ -97,14 +97,14 @@
 			reg = <0x20000000 DT_SIZE_K(136)>;
 		};
 
-		non_secure_ram: partition@20022000 {
+		non_secure_ram: partition@20020000 {
 			label = "non-secure-memory";
-			reg = <0x20022000 DT_SIZE_K(136)>;
+			reg = <0x20020000 DT_SIZE_K(64)>;
 		};
 	};
 };
 
-&flexcomm0 {
+&flexcomm2 {
 	compatible = "nxp,lpc-usart";
 	current-speed = <115200>;
 };
@@ -125,9 +125,9 @@
 			label = "image-0";
 			reg = <0x00008000 DT_SIZE_K(160)>;
 		};
-		slot0_ns_partition: partition@30000 {
+		slot0_ns_partition: partition@40000 {
 			label = "image-0-nonsecure";
-			reg = <0x00030000 DT_SIZE_K(96)>;
+			reg = <0x00040000 DT_SIZE_K(96)>;
 		};
 		slot1_partition: partition@48000 {
 			label = "image-1";
