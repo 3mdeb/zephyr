@@ -135,7 +135,7 @@ __weak void clock_init(void)
 	CLOCK_SetupFROClocking(SystemCoreClock);
 
 	/* Switch MAIN_CLK to FRO_HF */
-	CLOCK_AttachClk(kFRO_HF_to_MAIN_CLK);
+	//CLOCK_AttachClk(kFRO_HF_to_MAIN_CLK);
 
 #else
 	/* Switch PLL1 clock source selector to XTAL32M */
