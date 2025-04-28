@@ -1469,12 +1469,14 @@ static int esp_reset(const struct device *dev)
 	}
 
 #if DT_INST_NODE_HAS_PROP(0, power_gpios)
+	LOG_INF("DT has power_gpios");
 	const struct esp_config *config = dev->config;
 
 	gpio_pin_set_dt(&config->power, 0);
 	k_sleep(K_MSEC(100));
 	gpio_pin_set_dt(&config->power, 1);
 #elif DT_INST_NODE_HAS_PROP(0, reset_gpios)
+	LOG_INF("DT has reset_gpios");
 	const struct esp_config *config = dev->config;
 
 	gpio_pin_set_dt(&config->reset, 1);
@@ -1482,13 +1484,16 @@ static int esp_reset(const struct device *dev)
 	gpio_pin_set_dt(&config->reset, 0);
 #else
 #if DT_INST_NODE_HAS_PROP(0, external_reset)
+	LOG_INF("DT has external_reset");
+	LOG_INF("Waiting for interface to come up by itself...");
 	/* Wait to see if the interface comes up by itself */
 	ret = k_sem_take(&data->sem_if_ready, K_MSEC(CONFIG_WIFI_ESP_AT_RESET_TIMEOUT));
+	LOG_INF("Result: %d", ret);
 #endif
 	int retries = 3;
-
 	/* Don't need to run this if the interface came up by itself */
 	while ((ret != 0) && retries--) {
+		LOG_INF("ESP_AT: sending RST CMD");
 		ret = modem_cmd_send(&data->mctx.iface, &data->mctx.cmd_handler,
 				     NULL, 0, "AT+RST", &data->sem_if_ready,
 				     K_MSEC(CONFIG_WIFI_ESP_AT_RESET_TIMEOUT));
