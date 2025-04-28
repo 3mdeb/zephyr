@@ -27,6 +27,14 @@
 		};
 	};
 
+	pinmux_flexcomm3_usart: pinmux_flexcomm3_usart {
+		group0 {
+			pinmux = <FC3_TXD_SCL_MISO_WS_PIO0_2>,
+				<FC3_RXD_SDA_MOSI_DATA_PIO0_3>;
+			slew-rate = "standard";
+		};
+	};
+
 	pinmux_flexcomm4_i2c: pinmux_flexcomm4_i2c {
 		group0 {
 			pinmux = <FC4_TXD_SCL_MISO_WS_PIO1_20>,

@@ -30,9 +30,9 @@
 		zephyr,sram = &non_secure_ram;
 		zephyr,flash = &flash0;
 		zephyr,code-partition = &slot0_ns_partition;
-		zephyr,uart-mcumgr = &flexcomm2;
-		zephyr,console = &flexcomm2;
-		zephyr,shell-uart = &flexcomm2;
+		zephyr,uart-mcumgr = &flexcomm3;
+		zephyr,console = &flexcomm3;
+		zephyr,shell-uart = &flexcomm3;
 		zephyr,entropy = &rng;
 	};
 
@@ -81,6 +81,10 @@
 };
 
 &flexcomm2 {
+	status = "okay";
+};
+
+&flexcomm3 {
 	status = "okay";
 };
 
