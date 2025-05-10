@@ -211,6 +211,8 @@ static void esp_rx(void *p1, void *p2, void *p3)
 
 	struct esp_data *data = p1;
 
+	LOG_INF("Setting up modem RX handler...");
+
 	while (true) {
 		/* wait for incoming data */
 		modem_iface_uart_rx_wait(&data->mctx.iface, K_FOREVER);
@@ -936,6 +938,7 @@ MODEM_CMD_DEFINE(on_cmd_ready)
 {
 	struct esp_data *dev = CONTAINER_OF(data, struct esp_data,
 					    cmd_handler_data);
+	LOG_INF("give sem_if_ready");
 	k_sem_give(&dev->sem_if_ready);
 
 
@@ -1634,6 +1637,7 @@ static int esp_init(const struct device *dev)
 
 	/* pin setup */
 #if DT_INST_NODE_HAS_PROP(0, power_gpios)
+	LOG_INF("DT has power_gpios");
 	ret = gpio_pin_configure_dt(&config->power, GPIO_OUTPUT_INACTIVE);
 	if (ret < 0) {
 		LOG_ERR("Failed to configure %s pin", "power");
@@ -1641,6 +1645,7 @@ static int esp_init(const struct device *dev)
 	}
 #endif
 #if DT_INST_NODE_HAS_PROP(0, reset_gpios)
+	LOG_INF("DT has reset_gpios");
 	ret = gpio_pin_configure_dt(&config->reset, GPIO_OUTPUT_INACTIVE);
 	if (ret < 0) {
 		LOG_ERR("Failed to configure %s pin", "reset");
@@ -1648,6 +1653,7 @@ static int esp_init(const struct device *dev)
 	}
 #endif
 
+	LOG_INF("Starting RX thread...");
 	/* start RX thread */
 	k_thread_create(&esp_rx_thread, esp_rx_stack,
 			K_KERNEL_STACK_SIZEOF(esp_rx_stack),
