@@ -109,6 +109,11 @@
 	current-speed = <115200>;
 };
 
+&flexcomm3 {
+	compatible = "nxp,lpc-usart";
+	current-speed = <115200>;
+};
+
 &flash0 {
 
 	partitions {
@@ -185,6 +190,11 @@ mikrobus_spi: &hs_lspi {
 
 &flexcomm2 {
 	pinctrl-0 = <&pinmux_flexcomm2_usart>;
+	pinctrl-names = "default";
+};
+
+&flexcomm3 {
+	pinctrl-0 = <&pinmux_flexcomm3_usart>;
 	pinctrl-names = "default";
 };
 
