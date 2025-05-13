@@ -12,7 +12,7 @@
 		led1 = &green_led;
 		led2 = &blue_led;
 		spi-8 = &hs_lspi;
-		usart-0 = &flexcomm0;
+		usart-0 = &flexcomm2;
 	};
 
 	leds {
@@ -104,7 +104,7 @@
 	};
 };
 
-&flexcomm0 {
+&flexcomm2 {
 	compatible = "nxp,lpc-usart";
 	current-speed = <115200>;
 };
