@@ -132,7 +132,7 @@
 		};
 		slot0_ns_partition: partition@48000 {
 			label = "image-0-nonsecure";
-			reg = <0x00048000 DT_SIZE_K(160)>;
+			reg = <0x00048000 DT_SIZE_K(256)>;
 		};
 		/*
 		 * The flash starting at 0x88000 and ending at
